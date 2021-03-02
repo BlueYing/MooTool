@@ -42,6 +42,26 @@ public class CryptoListener {
 
     public static void addListeners() {
         CryptoForm cryptoForm = CryptoForm.getInstance();
+
+        // 凯撒密码加密
+        cryptoForm.getKsEncryptButton().addActionListener(e -> {
+            String content = cryptoForm.getKsOriginalText().getText();
+            String key = cryptoForm.getKsKey().getText();
+            byte[] data = StrUtil.bytes(content);
+            int keyV = Integer.parseInt(key);
+            StringBuilder sb = StrUtil.builder();
+            for (byte b : data) {
+                if(Character.isLowerCase(b)) {
+                    sb.append((char) ((b - 'a' + keyV) % 26 + 'a'));
+                }else if(Character.isUpperCase(b)){
+                    sb.append((char) ((b - 'A' + keyV) % 26 + 'A'));
+                }else {
+                    sb.append((char)b);
+                }
+            }
+            cryptoForm.getKsCipherText().setText(sb.toString());
+        });
+
         // 对称-加密按钮
         cryptoForm.getSymEncryptButton().addActionListener(e -> {
             try {
